@@ -1,0 +1,7 @@
+netty:
+  default:
+    allocator:
+      max-order: 3
+micronaut:
+  security:
+    authentication: cookie
