@@ -35,10 +35,10 @@ dependencies {
     testResourcesImplementation('io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.0-M3')
 }
 
-
 application {
     mainClass.set("example.micronaut.Application")
 }
+
 java {
     sourceCompatibility = JavaVersion.toVersion("11")
     targetCompatibility = JavaVersion.toVersion("11")
@@ -54,6 +54,7 @@ micronaut {
     }
     testResources {
         version = '1.0.0-M3'
+        enabled = true
     }
 }
 
