@@ -35,7 +35,7 @@ class VaultSecretTest {
     void secretsAreUsedForConfiguration() {
         ApplicationContext ctx = ApplicationContext.run(
                 CollectionUtils.mapOf(
-                        "test-resources.vault.client.token", "root"
+                        "vault.client.token", "token"
                 )
         );
 

@@ -12,4 +12,12 @@ vault:
       enabled: true # <3>
     kv-version: "V2"
     token: "token" # <4>
-    uri: "http://localhost:8200" # <5>
+---
+test-resources:
+  containers:
+    vault:
+      token: "token"
+      path: secret/micronautguide
+      secrets:
+        - "micronaut.security.oauth2.clients.companyauthserver.client-id=hello"
+        - "micronaut.security.oauth2.clients.companyauthserver.client-secret=world"

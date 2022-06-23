@@ -5,5 +5,3 @@ netty:
 micronaut:
   security:
     authentication: cookie
-test-resources:
-  token: "token"

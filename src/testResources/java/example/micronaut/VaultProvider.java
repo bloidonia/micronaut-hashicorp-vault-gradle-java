@@ -1,9 +1,12 @@
 package example.micronaut;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.vault.VaultContainer;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -11,6 +14,8 @@ import java.util.Map;
 import java.util.Optional;
 
 public class VaultProvider extends AbstractTestContainersProvider<VaultContainer<?>> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(VaultProvider.class);
 
     public static final String ROOT_KEY = "root";
     public static final int VAULT_PORT = 8200;
@@ -33,10 +38,25 @@ public class VaultProvider extends AbstractTestContainersProvider<VaultContainer
     }
 
     @Override
+    public List<String> getRequiredProperties(String expression) {
+        return Arrays.asList(
+                "test-resources.containers.vault.token",
+                "test-resources.containers.vault.path",
+                "test-resources.containers.vault.secrets"
+        );
+    }
+
+    @Override
     protected VaultContainer<?> createContainer(DockerImageName imageName, Map properties) {
-        System.out.println(properties);
+        LOG.info("PROPERTIES: {}", properties);
+        List<String> strings = (List<String>) properties.get("test-resources.containers.vault.secrets");
         return new VaultContainer<>(imageName)
-                .withVaultToken(properties.get("token").toString());
+                .withVaultToken(properties.get("test-resources.containers.vault.token").toString())
+                .withSecretInVault(
+                        properties.get("test-resources.containers.vault.path").toString(),
+                        strings.get(0),
+                        strings.subList(1, strings.size()).toArray(new String[0])
+                );
     }
 
     @Override
