@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.vault.VaultContainer;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -33,30 +32,22 @@ public class VaultProvider extends AbstractTestContainersProvider<VaultContainer
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, VaultContainer container) {
-        return Optional.of("http://" + container.getHost() + ":" + container.getMappedPort(VAULT_PORT));
-    }
-
-    @Override
-    public List<String> getRequiredProperties(String expression) {
-        return Arrays.asList(
-                "test-resources.containers.vault.token",
-                "test-resources.containers.vault.path",
-                "test-resources.containers.vault.secrets"
-        );
-    }
-
-    @Override
-    protected VaultContainer<?> createContainer(DockerImageName imageName, Map properties) {
-        LOG.info("PROPERTIES: {}", properties);
-        List<String> strings = (List<String>) properties.get("test-resources.containers.vault.secrets");
+    protected VaultContainer<?> createContainer(DockerImageName imageName, Map<String, Object> requestedProperties, Map<String, Object> testResourcesConfiguration) {
+        LOG.info("REQUEST PROPERTIES: {}", requestedProperties);
+        LOG.info("TEST RESOURCES CONFIG: {}", testResourcesConfiguration);
+        List<String> strings = (List<String>) testResourcesConfiguration.get("containers.vault.secrets");
         return new VaultContainer<>(imageName)
-                .withVaultToken(properties.get("test-resources.containers.vault.token").toString())
+                .withVaultToken(testResourcesConfiguration.get("containers.vault.token").toString())
                 .withSecretInVault(
-                        properties.get("test-resources.containers.vault.path").toString(),
+                        testResourcesConfiguration.get("containers.vault.path").toString(),
                         strings.get(0),
                         strings.subList(1, strings.size()).toArray(new String[0])
                 );
+    }
+
+    @Override
+    protected Optional<String> resolveProperty(String propertyName, VaultContainer container) {
+        return Optional.of("http://" + container.getHost() + ":" + container.getMappedPort(VAULT_PORT));
     }
 
     @Override

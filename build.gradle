@@ -9,6 +9,7 @@ group = "example.micronaut"
 
 repositories {
     mavenCentral()
+    mavenLocal()
     maven {
         url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
     }
@@ -33,7 +34,8 @@ dependencies {
 
     testResourcesImplementation('org.testcontainers:vault')
     testresources('org.testcontainers:vault')
-    testResourcesImplementation('io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.0-M3')
+
+    testResourcesImplementation('io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.0-SNAPSHOT')
 }
 
 application {
@@ -54,7 +56,7 @@ micronaut {
         annotations("example.micronaut.*")
     }
     testResources {
-        version = '1.0.0-M3'
+        version = '1.0.0-SNAPSHOT'
         enabled = true
     }
 }
