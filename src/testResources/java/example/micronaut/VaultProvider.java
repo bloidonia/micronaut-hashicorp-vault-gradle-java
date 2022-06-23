@@ -1,8 +1,8 @@
 package example.micronaut;
 
 import io.micronaut.testresources.testcontainers.AbstractTestContainersProvider;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.vault.VaultContainer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class VaultProvider extends AbstractTestContainersProvider {
+public class VaultProvider extends AbstractTestContainersProvider<VaultContainer<?>> {
 
     public static final String ROOT_KEY = "root";
     public static final int VAULT_PORT = 8200;
@@ -28,17 +28,15 @@ public class VaultProvider extends AbstractTestContainersProvider {
     }
 
     @Override
-    protected Optional<String> resolveProperty(String propertyName, GenericContainer container) {
+    protected Optional<String> resolveProperty(String propertyName, VaultContainer container) {
         return Optional.of("http://" + container.getHost() + ":" + container.getMappedPort(VAULT_PORT));
     }
 
     @Override
-    protected GenericContainer<?> createContainer(DockerImageName imageName, Map properties) {
-        return new GenericContainer(DEFAULT_IMAGE)
-                .withExposedPorts(VAULT_PORT)
-                .withEnv("VAULT_ADDR", "http://0.0.0.0:8200")
-                .withEnv("VAULT_DEV_ROOT_TOKEN_ID", ROOT_KEY)
-                .withEnv("VAULT_TOKEN", ROOT_KEY);
+    protected VaultContainer<?> createContainer(DockerImageName imageName, Map properties) {
+        System.out.println(properties);
+        return new VaultContainer<>(imageName)
+                .withVaultToken(properties.get("token").toString());
     }
 
     @Override

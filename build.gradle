@@ -30,7 +30,9 @@ dependencies {
 
     testImplementation("org.testcontainers:junit-jupiter")
     testImplementation("org.testcontainers:testcontainers")
-    testImplementation 'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.0-M2'
+
+    testResourcesImplementation('org.testcontainers:vault')
+    testResourcesImplementation('io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.0-M3')
 }
 
 
@@ -49,6 +51,9 @@ micronaut {
     processing {
         incremental(true)
         annotations("example.micronaut.*")
+    }
+    testResources {
+        version = '1.0.0-M3'
     }
 }
 
