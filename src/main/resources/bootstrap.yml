@@ -11,6 +11,7 @@ vault:
     config:
       enabled: true # <3>
     kv-version: "V2"
+    token: "token"
 ---
 test-resources:
   containers:
