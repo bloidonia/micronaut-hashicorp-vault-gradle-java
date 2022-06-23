@@ -1,6 +1,7 @@
 plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
-    id("io.micronaut.application") version "3.4.1"
+    id("io.micronaut.application") version "3.5.0-SNAPSHOT"
+    id("io.micronaut.test-resources") version "3.5.0-SNAPSHOT"
 }
 
 version = "0.1"
@@ -8,23 +9,28 @@ group = "example.micronaut"
 
 repositories {
     mavenCentral()
+    maven {
+        url "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+    }
 }
 
 dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.security:micronaut-security-annotations")
+
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut.discovery:micronaut-discovery-client")
     implementation("io.micronaut.security:micronaut-security-oauth2")
     implementation("jakarta.annotation:jakarta.annotation-api")
-    runtimeOnly("ch.qos.logback:logback-classic")
-    testImplementation("org.testcontainers:junit-jupiter")
-    testImplementation("org.testcontainers:testcontainers")
-    compileOnly("org.graalvm.nativeimage:svm")
-
     implementation("io.micronaut:micronaut-validation")
 
+    runtimeOnly("ch.qos.logback:logback-classic")
+    compileOnly("org.graalvm.nativeimage:svm")
+
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:testcontainers")
+    testImplementation 'io.micronaut.testresources:micronaut-test-resources-testcontainers:1.0.0-M2'
 }
 
 
