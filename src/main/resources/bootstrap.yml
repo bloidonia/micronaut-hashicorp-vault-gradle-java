@@ -11,11 +11,10 @@ vault:
     config:
       enabled: true # <3>
     kv-version: "V2"
-    token: "token" # <4>
 ---
 test-resources:
   containers:
-    vault:
+    hashicorp-vault:
       token: "token"
       path: secret/micronautguide
       secrets:

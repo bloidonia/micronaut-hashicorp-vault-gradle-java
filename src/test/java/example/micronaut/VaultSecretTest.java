@@ -1,58 +1,24 @@
 package example.micronaut;
 
 import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.annotation.Property;
-import io.micronaut.context.annotation.Value;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.security.oauth2.configuration.OauthClientConfiguration;
-import org.junit.jupiter.api.BeforeAll;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.testcontainers.containers.GenericContainer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@MicronautTest
 class VaultSecretTest {
 
-//    private static final String ROOT_KEY = "root";
-//
-//    GenericContainer<?> vaultContainer = new GenericContainer<>("vault")
-//            .withExposedPorts(8200)
-//            .withEnv("VAULT_ADDR", "http://0.0.0.0:8200")
-//            .withEnv("VAULT_DEV_ROOT_TOKEN_ID", ROOT_KEY)
-//            .withEnv("VAULT_TOKEN", ROOT_KEY);
-
-//    @BeforeAll
-//    public void setup() throws Exception {
-//        addSecret("micronautguide", "hello", "world");
-//    }
-
-    @Value("${vault.client.uri}")
-    String vaultUri;
+    @Inject
+    ApplicationContext applicationContext;
 
     @Test
     void secretsAreUsedForConfiguration() {
-        ApplicationContext ctx = ApplicationContext.run(
-                CollectionUtils.mapOf(
-                        "vault.client.token", "token"
-                )
-        );
-
-        OauthClientConfiguration oauthClientConfiguration = ctx.getBean(OauthClientConfiguration.class);
+        OauthClientConfiguration oauthClientConfiguration = applicationContext.getBean(OauthClientConfiguration.class);
 
         assertEquals("hello", oauthClientConfiguration.getClientId());
         assertEquals("world", oauthClientConfiguration.getClientSecret());
-
-        ctx.close();
     }
-
-//    void addSecret(String key, String id, String secret) throws Exception {
-//        vaultContainer.execInContainer(
-//                "/bin/sh",
-//                "-c",
-//                "vault kv put secret/" + key + " micronaut.security.oauth2.clients.companyauthserver.client-id=" + id + " micronaut.security.oauth2.clients.companyauthserver.client-secret=" + secret
-//        );
-//    }
-
 }
